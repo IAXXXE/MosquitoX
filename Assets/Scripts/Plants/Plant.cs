@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Plant : MonoBehaviour
 {
-    [SerializeField] List<Sprite> spriteList = new List<Sprite>();
+    private Transform PotTrans;
+
     [SerializeField] List<int> growEnergy = new();
     
-    private int maxStage = 2;
+    private int maxStage;
     private int currStage = 0;
     private int currEnergy = 0;
 
@@ -15,19 +16,13 @@ public class Plant : MonoBehaviour
 
     void Start()
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PotTrans = transform.Find("PotSprite");
+        maxStage = PotTrans.childCount;
     }
 
     void Eat()
     {
         currEnergy ++;
-        Debug.Log("current energy : " + currEnergy + " grow e : " + growEnergy[currStage]) ;
         if(currEnergy >= growEnergy[currStage])
         {
             currEnergy -= growEnergy[currStage];
@@ -37,18 +32,25 @@ public class Plant : MonoBehaviour
 
     void Grow()
     {
-        spriteRenderer = transform.Find("Sprite").GetComponent<SpriteRenderer>();
-        if(currStage == 0)
+        if(currStage >= maxStage)
         {
-            spriteRenderer.gameObject.SetActive(true);
+            Skill();
+            return;
         }
 
-        Debug.Log("curr stage : " + currStage + "max stage : " + maxStage);
-        if(currStage == maxStage) return;
-
-        spriteRenderer.sprite = spriteList[currStage];
+        foreach(Transform sprite in PotTrans)
+        {
+            sprite.gameObject.SetActive(false);   
+        }
         currStage ++;
-        Debug.Log("grow " + currStage);
+        var spriteName = "Sprite_" + currStage.ToString();
+        // spriteRenderer = transform.Find(spriteName).GetComponent<SpriteRenderer>();
+        PotTrans.Find(spriteName).gameObject.SetActive(true);
+
+    }
+
+    protected virtual void Skill()
+    {
 
     }
 
@@ -56,10 +58,8 @@ public class Plant : MonoBehaviour
     {
         if (collider.gameObject.CompareTag("Bug"))
         {
-            Debug.Log("Eat");
             Eat();
             Destroy(collider.gameObject);
-            
         }
     }
 

@@ -9,16 +9,12 @@ public class MosquitoMid : Mosquito
 
     void OnEnable()
     {
+        base.OnEnable();
+
         MoveToRandomPosition();
         startTime = Time.time;
     }
 
-    public void isCaught()
-    {
-        Debug.Log("isDrag");
-        isDragging = true;
-        specificTween.Kill();
-    }
 
     // Update is called once per frame
     void Update()
@@ -38,21 +34,8 @@ public class MosquitoMid : Mosquito
 
     }
 
-    private Tween specificTween;
-    void MoveToRandomPosition()
-    {
-        Vector3 randomScreenPoint = new Vector3(Random.Range(0, Screen.width), Random.Range(0, Screen.height), Camera.main.nearClipPlane);
 
-        Vector3 randomWorldPoint = Camera.main.ScreenToWorldPoint(randomScreenPoint);
-
-        specificTween = transform.DOMove(randomWorldPoint, 5f);
-    }
-
-    void OnMouseEnter()
-    {
-        Debug.Log("Mouse Enter");
-    }
-
+    
     // void OnMouseDown()
     // {
     //     Debug.Log("Mouse Down");

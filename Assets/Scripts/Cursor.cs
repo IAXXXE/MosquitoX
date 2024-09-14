@@ -5,6 +5,9 @@ using UnityEngine;
 public class Cursor : MonoBehaviour
 {
     private Camera mainCamera;
+
+    private Vector2 offset = new Vector2(0.2f, 0.2f);
+
     private bool isCaught;
 
     private List<GameObject> touchBugs = new();
@@ -20,7 +23,8 @@ public class Cursor : MonoBehaviour
         Vector3 mousePosition = Input.mousePosition;
         mousePosition.z = mainCamera.WorldToScreenPoint(transform.position).z;
         Vector3 targetPosition = mainCamera.ScreenToWorldPoint(mousePosition);
-        transform.position = targetPosition;
+        var pos = new Vector3(targetPosition.x + offset.x, targetPosition.y + offset.y, targetPosition.z);
+        transform.position = pos;
 
         if(Input.GetMouseButtonDown(0) && touchBugs.Count > 0)
         {
@@ -46,24 +50,30 @@ public class Cursor : MonoBehaviour
 
     }
 
+    public bool LetBugsGo()
+    {
+        bool hasBug = false;
+        if (catchBugs.Count > 0) hasBug = true;
+        touchBugs.Clear();
+        catchBugs.Clear();
+        return hasBug;
+    }
+
     void OnTriggerEnter2D(Collider2D collider)
     {
         if(isCaught == true) return;
-        Debug.Log("OnTriggerEnter");
         if (collider.gameObject.CompareTag("Bug"))
         {
-            Debug.Log("Touch Bug");
             touchBugs.Add(collider.gameObject);
         }
     }
 
     void OnTriggerExit2D(Collider2D collider)
     {
-        Debug.Log("Exit Bug");
-
         if(collider.gameObject == null) return;
         touchBugs.Remove(collider.gameObject);
         catchBugs.Remove(collider.gameObject);
+        if(collider.GetComponent<Mosquito>() == null) return;
         collider.GetComponent<Mosquito>().isDragging = false;
 
     }

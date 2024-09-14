@@ -13,7 +13,7 @@ public class MosquitoSpawn : MonoBehaviour
     void Start()
     {
         startTime = Time.time;
-        Spawn(new MosquitoMid());
+        Spawn();
     }
 
     // Update is called once per frame
@@ -21,54 +21,49 @@ public class MosquitoSpawn : MonoBehaviour
     {
         float elapsedTime = Time.time - startTime;
 
-        if (elapsedTime >= 1f)
+        if (elapsedTime >= 5f)
         {
             startTime = Time.time;
-            Spawn(new MosquitoMid());
+            Spawn();
         }
     }
 
-    void Spawn(Mosquito mosquito)
+    void Spawn()
     {
 
-        Vector3 offScreenPosition = GetRandomOffScreenPosition();
-        Vector3 offScreenWorldPoint = Camera.main.ScreenToWorldPoint(offScreenPosition);
-
-        GameObject instance = Instantiate(mosquitoList[0], offScreenWorldPoint, Quaternion.identity);
+        Vector3 offPosition = GetRandomOffScreenPosition(100f, 200f);
+        // Vector3 offScreenWorldPoint = Camera.main.ScreenToWorldPoint(offScreenPosition);
+        var idx = UnityEngine.Random.Range(0, mosquitoList.Count);
+        GameObject instance = Instantiate(mosquitoList[idx], offPosition, Quaternion.identity);
 
         instance.transform.parent = transform;
     }
 
-    public Vector3 GetRandomOffScreenPosition()
+    public Vector3 GetRandomOffScreenPosition(float offset, float minYOffset)
     {
-        int direction = Random.Range(0, 4);
+        int direction = Random.Range(0, 3);
 
         float x, y;
 
         switch (direction)
         {
-            case 0:
+            case 0: // 上方
                 x = Random.Range(0, Screen.width);
                 y = Screen.height + offset;
                 break;
-            case 1:
-                x = Random.Range(0, Screen.width);
-                y = -offset;
-                break;
-            case 2:
+            case 1: // 左侧
                 x = -offset;
-                y = Random.Range(0, Screen.height);
+                y = Random.Range(minYOffset, Screen.height);
                 break;
-            case 3:
+            case 2: // 右侧
                 x = Screen.width + offset;
-                y = Random.Range(0, Screen.height);
+                y = Random.Range(minYOffset, Screen.height);
                 break;
             default:
                 x = 0;
                 y = 0;
                 break;
         }
-
-        return new Vector3(x, y, Camera.main.nearClipPlane);
+        return Camera.main.ScreenToWorldPoint(new Vector3(x, y, Camera.main.nearClipPlane));
     }
 }
