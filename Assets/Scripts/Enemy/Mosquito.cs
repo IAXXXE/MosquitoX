@@ -57,7 +57,6 @@ public class Mosquito : MonoBehaviour
 
     public virtual void isCaught()
     {
-        Debug.Log("isDrag");
         isDragging = true;
         specificTween.Kill();
     }

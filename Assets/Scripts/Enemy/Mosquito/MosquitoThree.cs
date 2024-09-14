@@ -7,7 +7,7 @@ public class MosquitoThree : Mosquito
 {
     private float startTime;
 
-    private string stat;
+    private string statt;
 
     void OnEnable()
     {
@@ -29,7 +29,7 @@ public class MosquitoThree : Mosquito
 
         if (elapsedTime >= 2f)
         {
-            if(stat == "tired") return;
+            if(statt == "tired") return;
             startTime = Time.time;
             MoveToCursor();
         }
@@ -37,13 +37,13 @@ public class MosquitoThree : Mosquito
         if(elapsedTime >= 5f)
         {
             startTime = Time.time;
-            stat = "normal";
+            statt = "normal";
         }
     }
 
     public override void isCaught()
     {
-        if(!(stat == "tired")) return;
+        if(!(statt == "tired")) return;
         isDragging = true;
         specificTween.Kill();
     }
@@ -69,13 +69,13 @@ public class MosquitoThree : Mosquito
 
     void OnCollisionEnter2D(Collision2D collider)
     {
-        if(stat == "tired") return;
+        if(statt == "tired") return;
 
         if (collider.gameObject.CompareTag("Cursor"))
         {
             KillDotween();
             var hasBug = collider.transform.GetComponent<Cursor>().LetBugsGo();
-            if(hasBug) stat = "tired";
+            if(hasBug) statt = "tired";
         }
     }
 

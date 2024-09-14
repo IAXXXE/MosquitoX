@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class Plant : MonoBehaviour
@@ -45,8 +46,18 @@ public class Plant : MonoBehaviour
         currStage ++;
         var spriteName = "Sprite_" + currStage.ToString();
         // spriteRenderer = transform.Find(spriteName).GetComponent<SpriteRenderer>();
-        PotTrans.Find(spriteName).gameObject.SetActive(true);
+        var plantTrans = PotTrans.Find(spriteName);
+        plantTrans.gameObject.SetActive(true);
+        plantTrans.localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
+        plantTrans.DOScale(1f, 0.3f).SetEase(Ease.OutBack).OnComplete(() => PlayAnim(plantTrans));
+    }
+
+    private void PlayAnim(Transform transform)
+    {
+        transform.DOScale(new Vector3(1 + 0.07f, 1 + 0.07f, 1), 2f)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetEase(Ease.InOutSine);
     }
 
     protected virtual void Skill()

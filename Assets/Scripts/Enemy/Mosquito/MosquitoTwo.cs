@@ -37,7 +37,6 @@ public class MosquitoTwo : Mosquito
     {
         if (collider.gameObject.CompareTag("Cursor"))
         {
-            Debug.Log("Run!");
             KillDotween();
             Vector2 contactPoint = collider.transform.position;
             Vector2 centerPoint = transform.position;

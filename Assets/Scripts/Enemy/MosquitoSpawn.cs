@@ -21,7 +21,7 @@ public class MosquitoSpawn : MonoBehaviour
     {
         float elapsedTime = Time.time - startTime;
 
-        if (elapsedTime >= 5f)
+        if (elapsedTime >= 3f)
         {
             startTime = Time.time;
             Spawn();
